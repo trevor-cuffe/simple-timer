@@ -1,6 +1,6 @@
 const durationInput = document.querySelector('#duration');
-const startButton = document.querySelector('#start');
-const pauseButton = document.querySelector('#pause');
+const startStopButton = document.querySelector('#start-stop');
+const resetButton = document.querySelector('#reset');
 const timerCircle = document.querySelector('#timerCircle');
 
 const timerRadius = timerCircle.getAttribute('r');
@@ -9,13 +9,15 @@ timerCircle.style.strokeDasharray = timerDiameter;
 
 let duration;
 
-const timer = new Timer(durationInput, startButton, pauseButton, {
+const timer = new Timer(durationInput, startStopButton, resetButton, {
     onStart(totalDuration) {
-        console.log("timer started");
         duration = totalDuration;
+        setStartButtonIcon(true);
+    },
+    onPause() {
+        setStartButtonIcon(false);
     },
     onTick(timeRemaining) {
-        console.log("timer ticked");
 
         //check to make sure duration is defined and non-zero
         if(!duration) return;
@@ -30,18 +32,40 @@ const timer = new Timer(durationInput, startButton, pauseButton, {
         //apply the calculated timer progress
         timerCircle.style.strokeDashoffset = timerPosition;
 
-        //apply color-change at certain intervals:
-        if (timerProgress >= .5) {
-            timerCircle.style.stroke = "green";
-        } else if (timerProgress >= .25) {
-            timerCircle.style.stroke = "yellow";
-        } else {
-            timerCircle.style.stroke = "red";
-        }
+        setTimerColor(timerProgress);
 
     },
+    onReset() {
+        timerCircle.style.strokeDashoffset = 0;
+        setTimerColor(1);
+    },
     onComplete() {
-        console.log("timer complete");
+    },
+    onError(error) {
+        switch (error) {
+            case 1:
+                alert("Timer input must be a number greater than zero");
+                break;
+        }
     }
 });
+
+function setStartButtonIcon(isRunning) {
+    if (isRunning) {
+        startStopButton.innerHTML = '<i class="fas fa-pause"></i>';
+    } else {
+        startStopButton.innerHTML = '<i class="fas fa-play"></i>';
+    }
+}
+
+function setTimerColor(progress) {
+    //apply color-change at certain intervals:
+    if (progress >= .5) {
+        timerCircle.style.stroke = "green";
+    } else if (progress >= .25) {
+        timerCircle.style.stroke = "yellow";
+    } else {
+        timerCircle.style.stroke = "red";
+    }
+}
 
