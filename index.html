@@ -4,13 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="main.css">
+
 </head>
+
 <body>
+    <div class="timer">
+        <div class="controls">
+            <input type="text" id="duration">
+            <div class="controls__buttons">
+                <button id="start"><i class="fas fa-play"></i></button>
+                <button id="pause"><i class="fas fa-pause"></i></button>
+            </div>
+        </div>
+        <svg class="dial">
+            <circle
+                id="timerCircle"
+                r="190"
+                cx="200"
+                cy="200"
+                fill="transparent"
+                stroke="green"
+                stroke-width="10px"
+                transform="rotate(-90 200 200)"
+            />
+        </svg>
+    </div>
 
-    <input type="text" id="duration">
-    <button id="start">Start</button>
-    <button id="pause">Pause</button>
-
+    <script type="text/javascript" src="timer.js"></script>
     <script type="text/javascript" src="index.js"></script>
 </body>
 </html>
