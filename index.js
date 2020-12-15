@@ -9,6 +9,7 @@ timerCircle.style.strokeDasharray = timerDiameter;
 
 let duration;
 
+// initialize timer
 const timer = new Timer(durationInput, startStopButton, resetButton, {
     onStart(totalDuration) {
         duration = totalDuration;
@@ -18,6 +19,11 @@ const timer = new Timer(durationInput, startStopButton, resetButton, {
         setStartButtonIcon(false);
     },
     onTick(timeRemaining) {
+        // ===========================================================//
+        // Input value should already be updated from the timer class.
+        // This method is only responsible for updating styles
+        // ===========================================================//
+
 
         //check to make sure duration is defined and non-zero
         if(!duration) return;
@@ -31,15 +37,15 @@ const timer = new Timer(durationInput, startStopButton, resetButton, {
         //--- Apply Styles to Timer Display ---//
         //apply the calculated timer progress
         timerCircle.style.strokeDashoffset = timerPosition;
-
+        //apply color
         setTimerColor(timerProgress);
 
     },
     onReset() {
-        timerCircle.style.strokeDashoffset = 0;
-        setTimerColor(1);
+        resetTimerDisplay();
     },
     onComplete() {
+        resetTimerDisplay();
     },
     onError(error) {
         switch (error) {
@@ -50,6 +56,11 @@ const timer = new Timer(durationInput, startStopButton, resetButton, {
     }
 });
 
+
+//=========================//
+//======== METHODS ========//
+//=========================//
+
 function setStartButtonIcon(isRunning) {
     if (isRunning) {
         startStopButton.innerHTML = '<i class="fas fa-pause"></i>';
@@ -59,13 +70,14 @@ function setStartButtonIcon(isRunning) {
 }
 
 function setTimerColor(progress) {
+    console.log(progress);
     // fade color-change through yellow and red
     // Green until 70%
     // Yellow at 40%
     // Red at 10%
 
     // green  = rgb(  0, 128, 0)
-    // yellow = rgb(255, 255, 0)
+    // yellow = rgb(255, 228, 0)
     // red    = rgb(255,   0, 0)
 
     // RED CALCULATION:
@@ -79,10 +91,15 @@ function setTimerColor(progress) {
     // starting at 40%, reduce to 0 over 30% of the duration (1/3.33)
     let green =
         128
-        + 127 * Math.min(1, (progress < 0.7) * (0.7 - progress) * 3.33)
-        - 255 * Math.min(1, (progress < 0.4 ) * (0.4 - progress) * 3.33);
+        + 100 * Math.min(1, (progress < 0.7) * (0.7 - progress) * 3.33)
+        - 228 * Math.min(1, (progress < 0.4 ) * (0.4 - progress) * 3.33);
 
-    timerCircle.style.stroke = `rgb(${red}, ${green}, 0)`;
+    if (progress <= 0) {
+        timerCircle.style.stroke = 'rgb(180, 180, 180)';
+    } else {
+        timerCircle.style.stroke = `rgb(${red}, ${green}, 0)`;
+    }
+
    
    
     // //apply color-change at certain intervals:
@@ -95,6 +112,12 @@ function setTimerColor(progress) {
     // }
 }
 
+function resetTimerDisplay() {
+    timerCircle.style.strokeDashoffset = 0;
+    setTimerColor(0);
+}
+
 
 //Next Step:
 //Allow user to escape timer input and return to previous value
+//Add option for ticking sound
